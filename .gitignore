@@ -1,0 +1,8 @@
+# Dependencies
+node_modules/
+
+# Build Files
+.next/
+
+# Typescript
+next-env.d.ts
