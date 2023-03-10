@@ -8,7 +8,7 @@ export default async function handler(req, res) {
 	if (query == "" || split.length != 2) {
 		res.status(400).send("");
 	} else {
-		const user = split[1].split("@")[0]
+		const author = split[1].split("@")[0]
 		
 		const response = {
 			"subject": `${query}`,
@@ -16,7 +16,7 @@ export default async function handler(req, res) {
 				{
 					"rel": "self",
 					"type": "application/activity+json",
-					"href": `${domain}/api/users/${user}`
+					"href": `${domain}/api/author/${author}`
 				}
 			]
 		}
