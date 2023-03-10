@@ -1,3 +1,4 @@
+// TODO: Name Function
 export default (req, res) => {
 // 	console.log(req)
 	
@@ -31,7 +32,7 @@ export default (req, res) => {
 		"url": users,
 		"inbox": `${url}/inbox`,
 		"outbox": `${url}/outbox`,
-		"following": `${url}/following`,,
+		"following": `${url}/following`,
 		"followers": `${url}/followers`,
 		"liked": `${url}/liked`,
 		"publicKey": {
