@@ -14,7 +14,7 @@ export default (req, res) => {
 	const message = `<p>This is a test post under the slug, "${slug}"</p>`
 	
 	// TODO: Figure out if it's possible to set Content-Type to `application/activity+json; charset=utf-8`
-	res.status(200).json({  // Was res.json(...), but it wouldn't let me override the Content-Type
+	res.status(200).json({
 		"@context": [
 			"https://www.w3.org/ns/activitystreams",
 			{
