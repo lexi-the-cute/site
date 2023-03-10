@@ -1,5 +1,6 @@
-// TODO: Name Function
-export default (req, res) => {
+import type { NextApiRequest, NextApiResponse } from 'next'
+
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
 // 	console.log(req)
 	
 	const proto = req.headers["x-forwarded-proto"] || req.connection.encrypted ? "https" : "http"  // https://stackoverflow.com/a/65892809
@@ -20,8 +21,7 @@ export default (req, res) => {
 	const donate = `<a href="https://ko-fi.com/alexisartdesign" target="_blank" rel="nofollow noopener noreferrer me"><span class="invisible">https://</span><span class="">ko-fi.com/alexisartdesign</span><span class="invisible"></span></a>`
 	const published = "2023-03-09T00:00:00Z"
 	
-	// TODO: Figure out if it's possible to set Content-Type to `application/activity+json; charset=utf-8`
-	res.status(200).json({
+	const response = {
 		"@context": [
 			"https://www.w3.org/ns/activitystreams",
 			"https://w3id.org/security/v1"
@@ -77,5 +77,9 @@ export default (req, res) => {
 // 				}
 // 			}
 		]
-	});
+	}
+	
+	res.status(200)
+	res.setHeader("Content-Type", "application/activity+json; charset=utf-8")
+	res.send(JSON.stringify(response, null, 2));
 };
