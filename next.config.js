@@ -20,6 +20,11 @@ const nextConfig = {
 					},
 				],
 			},
+			{
+				source: '/.well-known/webfinger',
+				destination: '/api/webfinger',
+				permanent: false
+			},
 		]
 	},
 	async headers() {
