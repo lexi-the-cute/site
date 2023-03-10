@@ -9,7 +9,7 @@ export default async function handler(req, res) {
 	const domain = `${proto}://${req.headers.host}`
 	const path = req.url
 	const url = `${domain}${path}`
-	const users = `${domain}/authors/${slug}`
+	const author = `${domain}/author/${slug}`
 	const publickey = "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAs7HlUayxKMv4tDRqeDBJ\nqMIx4ldTsp51yxjMSgZt8uLLoF5Q9iUYEIb0St7EVUcpyf62e85P4o8NMPPg/0aH\nyOh0/lUiAhrRSWs3KW+jxDLluQ441oyTs+iFP7F5GaT0kJbPTXNxzhN4K456ookp\nqNKl7pW5C999Dc77Het0gpqXbmGdT+rrB9M9z98QQu9w6kOX3uyjEVFKabtgxpD5\n4+8CDy+t7hQiiXyscmMlbQdqN062DL92V7FxzgPssbVNuFGlMNSVj1zmEOP8t2oO\nq1CmvzeEWUTwW2ZCaZLyWlpNDahVK6keegCrSRXdZ/CZrXLSc/eTsCkBkKhGpToo\nwQIDAQAB\n-----END PUBLIC KEY-----"
 	
 	const name = `${slug} <demo>`
@@ -29,7 +29,7 @@ export default async function handler(req, res) {
 		"id": url,
 		"type": "Service",
 		"preferredUsername": slug,
-		"url": users,
+		"url": author,
 		"inbox": `${url}/inbox`,
 		"outbox": `${url}/outbox`,
 		"following": `${url}/following`,

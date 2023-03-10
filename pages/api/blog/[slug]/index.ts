@@ -10,8 +10,8 @@ export default async function handler(req, res) {
 	const path = req.url
 	const url = `${domain}${path}`
 	const page = `${domain}/blog/${slug}`
-	const users = `${domain}/api/users/alexis`
-	const followers = `${users}/followers`
+	const author = `${domain}/api/author/alexis`
+	const followers = `${author}/followers`
 	
 	const message = `<p>This is a test post under the slug, "${slug}"</p>`
 	
@@ -34,7 +34,7 @@ export default async function handler(req, res) {
 		"inReplyTo": null,
 		"published": "2023-03-06T00:00:00Z",
 		"url": page,
-		"attributedTo": users,
+		"attributedTo": author,
 		"to": [
 			"https://www.w3.org/ns/activitystreams#Public"
 		],

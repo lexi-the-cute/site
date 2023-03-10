@@ -21,6 +21,19 @@ const nextConfig = {
 				],
 			},
 			{
+				source: '/author/:slug',
+				destination: '/api/author/:slug',
+				permanent: false,
+				has: [
+					{
+						// Accept: application/activity+json
+						type: 'header',
+						key: 'Accept',
+						value: '(.*(?<found>application\/activity\\+json).*)'
+					},
+				],
+			},
+			{
 				source: '/.well-known/webfinger',
 				destination: '/api/webfinger',
 				permanent: false
