@@ -1,0 +1,32 @@
+import Head from 'next/head';
+import { headers } from 'next/headers';
+import { NextResponse } from 'next/server';
+
+function Header({ title }) {
+	return <h1>{title ? title : 'Default title'}</h1>;
+}
+
+export async function GET(request: NextRequest, { params }) {
+	const accept = headers().get("Accept")
+	
+	if (accept.includes("application/activity+json")) {
+		NextResponse.redirect("http://127.0.0.1:3000/blog/${params}/json")
+	} else {
+		return Page(params)
+	}
+}
+
+function Page(params) {
+	const names = ['Ada Lovelace', 'Grace Hopper', 'Margaret Hamilton'];
+	
+	return (
+		<div>
+			<Header title={params} />
+			<ul>
+				{names.map((name) => (
+					<li key={name}>{name}</li>
+				))}
+			</ul>
+		</div>
+	)
+}
