@@ -6,3 +6,6 @@ node_modules/
 
 # Typescript
 next-env.d.ts
+
+# Netlify folder
+.netlify/
