@@ -16,8 +16,8 @@ export default async function handler(req, res) {
 	const message = `<p>This is a test post under the slug, "${slug}"</p>`
 	const summary = `<p>I'm an author which can be found on <span class="h-card"><a href="https://chat.alexisart.me/@alexis" class="u-url mention">@<span>alexis</span></a></span>.</p>`
 	
-	const icon = `${domain}/images/logo`
-	const header = `${domain}/images/header`
+	const icon = `${domain}/static/images/logo.png`
+	const header = `${domain}/static/images/header.png`
 	const donate = `<a href="https://ko-fi.com/alexisartdesign" target="_blank" rel="nofollow noopener noreferrer me"><span class="invisible">https://</span><span class="">ko-fi.com/alexisartdesign</span><span class="invisible"></span></a>`
 	const published = "2023-03-09T00:00:00Z"
 	
@@ -73,7 +73,7 @@ export default async function handler(req, res) {
 // 				"icon": {
 // 					"type": "Image",
 // 					"mediaType": "image/png",
-// 					"url": `${domain}/images/emojis/blog`
+// 					"url": `${domain}/static/images/emojis/blog.png`
 // 				}
 // 			}
 		]
