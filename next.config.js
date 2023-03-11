@@ -17,7 +17,20 @@ const nextConfig = {
 						type: 'header',
 						key: 'Accept',
 						value: '(.*(?<found>application\/activity\\+json).*)'
-					},
+					}
+				],
+			},
+			{
+				source: '/blog/:slug',
+				destination: '/api/blog/:slug',
+				permanent: false,
+				has: [
+					{
+						// Accept: application/ld+json; profile="https://www.w3.org/ns/activitystreams"
+						type: 'header',
+						key: 'Accept',
+						value: '(.*(?<found>application\/ld\\+json; profile="https:\/\/www\.w3\.org\/ns\/activitystreams").*)'
+					}
 				],
 			},
 			{
@@ -30,7 +43,20 @@ const nextConfig = {
 						type: 'header',
 						key: 'Accept',
 						value: '(.*(?<found>application\/activity\\+json).*)'
-					},
+					}
+				],
+			},
+			{
+				source: '/author/:slug',
+				destination: '/api/author/:slug',
+				permanent: false,
+				has: [
+					{
+						// Accept: application/ld+json; profile="https://www.w3.org/ns/activitystreams"
+						type: 'header',
+						key: 'Accept',
+						value: '(.*(?<found>application\/ld\\+json; profile="https:\/\/www\.w3\.org\/ns\/activitystreams").*)'
+					}
 				],
 			},
 			{
