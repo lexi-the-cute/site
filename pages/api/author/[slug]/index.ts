@@ -20,11 +20,15 @@ export default async function handler(req, res) {
 	const header = `${domain}/images/header.png`
 	const donate = `<a href="https://ko-fi.com/alexisartdesign" target="_blank" rel="nofollow noopener noreferrer me"><span class="invisible">https://</span><span class="">ko-fi.com/alexisartdesign</span><span class="invisible"></span></a>`
 	const published = "2023-03-09T00:00:00Z"
+	const isCat = true
 	
 	const response = {
 		"@context": [
 			"https://www.w3.org/ns/activitystreams",
-			"https://w3id.org/security/v1"
+			"https://w3id.org/security/v1",
+			{
+				"isCat": "misskey:isCat"
+			}
 		],
 		"id": url,
 		"type": "Service",
@@ -47,6 +51,7 @@ export default async function handler(req, res) {
 		"name": name,
 		"summary": summary,
 		"published": published,
+		"isCat": isCat,
 		"icon": {
 			"type": "Image",
 			"mediaType": "image/png",
