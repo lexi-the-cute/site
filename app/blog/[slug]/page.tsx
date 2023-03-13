@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 // https://beta.nextjs.org/docs/rendering/server-and-client-components
 
 // Node Imports
@@ -32,7 +34,7 @@ async function ReadPost() {
 		.use(remarkGfm)
 		.use(remarkRehype)
 		.use(rehypeSanitize)
-		.use(rehypeReact, {
+		.use(rehypeReact, {  // TODO: Fix https://github.com/rehypejs/rehype-react/issues/39
 			createElement,
 			Fragment,
 			components: {
