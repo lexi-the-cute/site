@@ -1,7 +1,29 @@
+import nextMDX from "@next/mdx";
+import remarkGfm from "remark-gfm";
+import remarkRehype from "remark-rehype";
+import remarkFrontmatter from 'remark-frontmatter';
+
+// TODO: Take note of XSS In https://github.com/remarkjs/remark-rehype#security
+
+const withMDX = nextMDX({
+  extension: /\.mdx?$/,
+  options: {
+    // If you use remark-gfm, you'll need to use next.config.mjs
+    // as the package is ESM only
+    // https://github.com/remarkjs/remark-gfm#install
+    remarkPlugins: [remarkGfm], // https://github.com/remarkjs/remark-gfm#when-should-i-use-this
+    rehypePlugins: [remarkRehype], // https://github.com/remarkjs/remark-rehype#when-should-i-use-this
+    // If you use `MDXProvider`, uncomment the following line.
+    // providerImportSource: "@mdx-js/react",
+  },
+})
+
 /**
  * @type {import('next').NextConfig}
  */
 const nextConfig = {
+	pageExtensions: ['ts', 'tsx', 'js', 'jsx', 'md', 'mdx'],
+	reactStrictMode: false,
 	experimental: {
 		appDir: true,
 	},
@@ -81,4 +103,4 @@ const nextConfig = {
 	},
 }
 
-module.exports = nextConfig
+export default withMDX(nextConfig);
