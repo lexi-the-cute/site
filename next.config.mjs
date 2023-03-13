@@ -23,7 +23,7 @@ const withMDX = nextMDX({
  */
 const nextConfig = {
 	pageExtensions: ['ts', 'tsx', 'js', 'jsx', 'md', 'mdx'],
-	reactStrictMode: false,
+	reactStrictMode: true,
 	experimental: {
 		appDir: true,
 	},
