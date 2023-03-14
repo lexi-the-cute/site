@@ -5,7 +5,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 // Next Imports
-import { NextResponse } from 'next/server';
+import { notFound } from 'next/navigation';
 
 // React Imports
 import React from 'react';
@@ -74,11 +74,6 @@ export default function Page({params}) {
 		)
 	}).catch(function(error) {
 		// Post does not exist.
-		// TODO: Return 404 Status Code and Page Here
-// 		console.log(error)
-		
-		return (
-			<h1>Error: {error}</h1>
-		)
+		notFound();
 	})
 }
