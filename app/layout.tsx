@@ -3,12 +3,9 @@ export const metadata = {
 	description: "A blog with ActivityPub support"
 }
 
-export default function RootLayout({
-	children,
-}: {
-	children: React.ReactNode
-}) {
+export default function RootLayout({children}: {children: React.ReactNode}) {
 	return (
+		// Can't stick <!Doctype html> in this
 		<html lang="en">
 			<head>
 				<link rel="shortcut icon" href="/images/favicon.png" />

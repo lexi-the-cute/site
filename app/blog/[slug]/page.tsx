@@ -30,14 +30,14 @@ function Header({ title }) {
 	return <h1>{title ? title : 'Default title'}</h1>;
 }
 
-async function ReadPost(slug) {
+function ReadPost(slug) {
 	const POST_PATH = path.join(POSTS_PATH, `${slug}.mdx`)
 	
 	if (!fs.existsSync(POST_PATH)) {
 		return Promise.reject("Post does not exist")
 	}
 	
-	unified()
+	return unified()
 	.use(remarkParse)
 	.use(remarkGfm)
 	.use(remarkRehype)
@@ -52,13 +52,10 @@ async function ReadPost(slug) {
 		}
 	})
 	.process(fs.readFileSync(POST_PATH))
-	.then(function(file) {
-		return file
-	})
 }
 
-export default async function Page({params}) {
-	ReadPost(params.slug).then(function(post) {
+export default function Page({params}) {
+	return ReadPost(params.slug).then(function(post) {
 		const names = ['Ada Lovelace', 'Grace Hopper', 'Margaret Hamilton'];
 
 		return (
@@ -71,17 +68,17 @@ export default async function Page({params}) {
 				</ul>
 				<Favorites>{POSTS_PATH}</Favorites>
 				<div>
-					{post}
+					{post.result}
 				</div>
 			</>
 		)
 	}).catch(function(error) {
 		// Post does not exist.
 		// TODO: Return 404 Status Code and Page Here
-		console.log(error)
+// 		console.log(error)
 		
-// 		return (
-// 			<h1>Error:</h1>
-// 		)
+		return (
+			<h1>Error: {error}</h1>
+		)
 	})
 }
