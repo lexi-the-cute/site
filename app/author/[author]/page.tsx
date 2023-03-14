@@ -12,7 +12,7 @@ export default async function Page({params}) {
 	
 	return (
 		<div>
-			<Header title={params.slug} />
+			<Header title={params.author} />
 			<ul>
 				{names.map((name) => (
 					<li key={name}>{name}</li>

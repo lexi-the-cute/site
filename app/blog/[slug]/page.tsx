@@ -74,6 +74,7 @@ export default function Page({params}) {
 		)
 	}).catch(function(error) {
 		// Post does not exist.
+
 		notFound();
 	})
 }

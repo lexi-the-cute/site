@@ -31,7 +31,7 @@ const nextConfig = {
 		return [
 			{
 				source: '/blog/:slug',
-				destination: '/api/blog/:slug',
+				destination: '/blog/:slug/json',
 				permanent: false,
 				has: [
 					{
@@ -44,7 +44,7 @@ const nextConfig = {
 			},
 			{
 				source: '/blog/:slug',
-				destination: '/api/blog/:slug',
+				destination: '/blog/:slug/json',
 				permanent: false,
 				has: [
 					{
@@ -56,8 +56,8 @@ const nextConfig = {
 				],
 			},
 			{
-				source: '/author/:slug',
-				destination: '/api/author/:slug',
+				source: '/author/:author',
+				destination: '/author/:author/json',
 				permanent: false,
 				has: [
 					{
@@ -69,8 +69,8 @@ const nextConfig = {
 				],
 			},
 			{
-				source: '/author/:slug',
-				destination: '/api/author/:slug',
+				source: '/author/:author',
+				destination: '/author/:author/json',
 				permanent: false,
 				has: [
 					{
@@ -80,12 +80,7 @@ const nextConfig = {
 						value: '(.*(?<found>application\/ld\\+json; profile="https:\/\/www\.w3\.org\/ns\/activitystreams").*)'
 					}
 				],
-			},
-			{
-				source: '/.well-known/webfinger',
-				destination: '/api/webfinger',
-				permanent: false
-			},
+			}
 		]
 	},
 	async headers() {

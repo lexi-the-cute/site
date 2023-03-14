@@ -1,14 +1,13 @@
-// import type { NextApiRequest, NextApiResponse } from 'next'
+import { type NextRequest } from 'next/server';
 
-export default async function handler(req, res) {
-// 	console.log(req)
+export function GET(req: NextRequest, {params}) {
+	const url = new URL(req.url)
 	
-	const proto = req.headers["x-forwarded-proto"] || req.connection.encrypted ? "https" : "http"  // https://stackoverflow.com/a/65892809
-	const slug = req.query.slug
+	const proto = req.headers["x-forwarded-proto"] || url.protocol.split(":")[0]
+	const host = req.headers["host"] || url.host
+	const slug = params.slug
 	
-	const domain = `${proto}://${req.headers.host}`
-	const path = req.url
-	const url = `${domain}${path}`
+	const domain = `${proto}://${host}`
 	const page = `${domain}/blog/${slug}`
 	const author = `${domain}/api/author/alexis`
 	const followers = `${author}/followers`
@@ -58,7 +57,10 @@ export default async function handler(req, res) {
 		]
 	}
 	
-	res.status(200)
-	res.setHeader("Content-Type", "application/activity+json; charset=utf-8")
-	res.send(JSON.stringify(response, null, 2));
+	return new Response(JSON.stringify(response, null, 2), {
+		status: 200,
+		headers: {
+			"Content-Type": "application/activity+json; charset=utf-8"
+		}
+	});
 };

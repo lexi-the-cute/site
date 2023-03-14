@@ -1,14 +1,14 @@
-// import type { NextApiRequest, NextApiResponse } from 'next'
+import { type NextRequest } from 'next/server';
 
-export default async function handler(req, res) {
-// 	console.log(req)
+export function GET(req: NextRequest, {params}) {
+	const url = new URL(req.url)
 	
-	const proto = req.headers["x-forwarded-proto"] || req.connection.encrypted ? "https" : "http"  // https://stackoverflow.com/a/65892809
-	const slug = req.query.slug
+	const proto = req.headers["x-forwarded-proto"] || url.protocol.split(":")[0]
+	const host = req.headers["host"] || url.host
+	const slug = params.author
 	
-	const domain = `${proto}://${req.headers.host}`
-	const path = req.url
-	const url = `${domain}${path}`
+	const domain = `${proto}://${host}`
+	
 	const author = `${domain}/author/${slug}`
 	const publickey = "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAs7HlUayxKMv4tDRqeDBJ\nqMIx4ldTsp51yxjMSgZt8uLLoF5Q9iUYEIb0St7EVUcpyf62e85P4o8NMPPg/0aH\nyOh0/lUiAhrRSWs3KW+jxDLluQ441oyTs+iFP7F5GaT0kJbPTXNxzhN4K456ookp\nqNKl7pW5C999Dc77Het0gpqXbmGdT+rrB9M9z98QQu9w6kOX3uyjEVFKabtgxpD5\n4+8CDy+t7hQiiXyscmMlbQdqN062DL92V7FxzgPssbVNuFGlMNSVj1zmEOP8t2oO\nq1CmvzeEWUTwW2ZCaZLyWlpNDahVK6keegCrSRXdZ/CZrXLSc/eTsCkBkKhGpToo\nwQIDAQAB\n-----END PUBLIC KEY-----"
 	
@@ -84,7 +84,10 @@ export default async function handler(req, res) {
 		]
 	}
 	
-	res.status(200)
-	res.setHeader("Content-Type", "application/activity+json; charset=utf-8")
-	res.send(JSON.stringify(response, null, 2));
+	return new Response(JSON.stringify(response, null, 2), {
+		status: 200,
+		headers: {
+			"Content-Type": "application/activity+json; charset=utf-8"
+		}
+	});
 };
