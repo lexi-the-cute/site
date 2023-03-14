@@ -14,7 +14,7 @@ export function GET(req: NextRequest, {params}) {
 	const domain = `${proto}://${host}`
 	
 	const author = `${domain}/author/${slug}`
-	const publickey = process.env.ActivityPubPublicKey.replace(/\\n/g, '\n')
+	const publickey = typeof process.env.ActivityPubPublicKey !== "undefined" ? process.env.ActivityPubPublicKey.replace(/\\n/g, '\n') : ""
 	
 	const name = `${slug} <demo>`
 	const message = `<p>This is a test post under the slug, "${slug}"</p>`
