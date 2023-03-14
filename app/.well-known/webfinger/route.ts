@@ -28,7 +28,7 @@ export function GET(req: NextRequest, {params}) {
 				{
 					"rel": "self",
 					"type": "application/activity+json",
-					"href": `${domain}/api/author/${author}`
+					"href": `${domain}/author/${author}/json`
 				}
 			]
 		}

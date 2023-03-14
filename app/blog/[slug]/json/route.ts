@@ -13,7 +13,7 @@ export function GET(req: NextRequest, {params}) {
 	
 	const domain = `${proto}://${host}`
 	const page = `${domain}/blog/${slug}`
-	const author = `${domain}/api/author/alexis`
+	const author = `${domain}/author/alexis/json`
 	const followers = `${author}/followers`
 	
 	const message = `<p>This is a test post under the slug, "${slug}"</p>`
