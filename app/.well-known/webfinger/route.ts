@@ -3,7 +3,11 @@ import { type NextRequest } from 'next/server';
 export function GET(req: NextRequest, {params}) {
 	const url = new URL(req.url)
 	
-	const proto = req.headers["x-forwarded-proto"] || url.protocol.split(":")[0]
+	// TODO: Determine Protocol on Netlify Without Environment Var...
+	// ...(req.connection.encrypted ? "https" : "http") worked when I was using API pages
+	const proto = process.env.PROTOCOL || req.headers["x-forwarded-proto"] || url.protocol.split(":")[0]
+	url.protocol = proto
+	
 	const host = req.headers["host"] || url.host
 	const searchParams = url.searchParams
 	

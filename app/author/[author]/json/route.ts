@@ -3,14 +3,18 @@ import { type NextRequest } from 'next/server';
 export function GET(req: NextRequest, {params}) {
 	const url = new URL(req.url)
 	
-	const proto = req.headers["x-forwarded-proto"] || url.protocol.split(":")[0]
+	// TODO: Determine Protocol on Netlify Without Environment Var...
+	// ...(req.connection.encrypted ? "https" : "http") worked when I was using API pages
+	const proto = process.env.PROTOCOL || req.headers["x-forwarded-proto"] || url.protocol.split(":")[0]
+	url.protocol = proto
+	
 	const host = req.headers["host"] || url.host
 	const slug = params.author
 	
 	const domain = `${proto}://${host}`
 	
 	const author = `${domain}/author/${slug}`
-	const publickey = "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAs7HlUayxKMv4tDRqeDBJ\nqMIx4ldTsp51yxjMSgZt8uLLoF5Q9iUYEIb0St7EVUcpyf62e85P4o8NMPPg/0aH\nyOh0/lUiAhrRSWs3KW+jxDLluQ441oyTs+iFP7F5GaT0kJbPTXNxzhN4K456ookp\nqNKl7pW5C999Dc77Het0gpqXbmGdT+rrB9M9z98QQu9w6kOX3uyjEVFKabtgxpD5\n4+8CDy+t7hQiiXyscmMlbQdqN062DL92V7FxzgPssbVNuFGlMNSVj1zmEOP8t2oO\nq1CmvzeEWUTwW2ZCaZLyWlpNDahVK6keegCrSRXdZ/CZrXLSc/eTsCkBkKhGpToo\nwQIDAQAB\n-----END PUBLIC KEY-----"
+	const publickey = process.env.ActivityPubPublicKey
 	
 	const name = `${slug} <demo>`
 	const message = `<p>This is a test post under the slug, "${slug}"</p>`
@@ -45,7 +49,7 @@ export function GET(req: NextRequest, {params}) {
 			"publicKeyPem": publickey
 		},
 		"endpoints": {
-			"sharedInbox": `${domain}/api/inbox`
+			"sharedInbox": `${domain}/inbox`
 		},
 		
 		"name": name,
