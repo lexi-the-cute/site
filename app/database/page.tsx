@@ -1,4 +1,6 @@
-import prisma from '../../lib/prisma';
+// import prisma from '../../lib/prisma';
+import { PrismaClient } from '@prisma/client';
+const prisma: PrismaClient = new PrismaClient();
 
 function getData(id) {
 	return prisma.test.findUnique({
@@ -14,10 +16,10 @@ export default function Page({params}) {
 		console.log("Results: ", results)
 		
 		return (
-			<>
+			<div>
 				<h1>Hello</h1>
-				<div>{results}</d>
-			</>
+				{String(results)}
+			</div>
 		)
 	}).catch(function(err) {
 		console.error("Prisma Query Execution Error: ", err)
