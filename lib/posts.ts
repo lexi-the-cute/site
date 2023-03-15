@@ -33,7 +33,7 @@ export function ReadPostReact(slug) {
 	.use(remarkGfm)
 	.use(remarkRehype)
 	.use(rehypeSanitize)
-	.use(rehypeStringify, {
+	.use(rehypeReact, {
 		createElement: React.createElement,
 		Fragment: React.Fragment,
 		components: {
@@ -57,14 +57,6 @@ export function ReadPostHTML(slug) {
 	.use(remarkGfm)
 	.use(remarkRehype)
 	.use(rehypeSanitize)
-	.use(rehypeStringify, {
-		createElement: React.createElement,
-		Fragment: React.Fragment,
-		components: {
-			// `// @ts-nocheck` at top of file if you want to use the below 2 replacements
-// 			a: Link,
-// 			img: Image
-		}
-	})
+	.use(rehypeStringify)
 	.process(fs.readFileSync(POST_PATH))
 }
