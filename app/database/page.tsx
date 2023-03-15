@@ -30,4 +30,10 @@ export default function Page({params}) {
 			</>
 		)
 	})
+	
+	return (
+			<div>
+				<h1>Nada</h1>
+			</div>
+		)
 }
