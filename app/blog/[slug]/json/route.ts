@@ -24,9 +24,7 @@ export function GET(req: NextRequest, {params}) {
 		const author = `${domain}/author/alexis/json`
 		const followers = `${author}/followers`
 		
-		const message = post
-		
-		console.log(String(message))
+		const message = String(post)
 		
 		const response = {
 			"@context": [
