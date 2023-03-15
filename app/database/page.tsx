@@ -1,39 +1,14 @@
-// import prisma from '../../lib/prisma';
-import { PrismaClient } from '@prisma/client';
-const prisma: PrismaClient = new PrismaClient();
+import prisma from '../../lib/prisma';
 
-function getData(id) {
-	return prisma.test.findUnique({
-		where: {
-			id: id
-		}
-	})
-}
-
-export default function Page({params}) {
-	return getData(2).then(function(results) {
-		// console.log(await prisma.widget.create({ data: { } }));
-		console.log("Results: ", results)
-		
-		return (
-			<div>
-				<h1>Hello</h1>
-				{String(results)}
-			</div>
-		)
-	}).catch(function(err) {
-		console.error("Prisma Query Execution Error: ", err)
-		
-		return (
-			<>
-				<h1>Error: {err}</h1>
-			</>
-		)
-	})
+export default async function Page({params}) {
+	const posts = await prisma.posts.findMany()
 	
 	return (
-			<div>
-				<h1>Nada</h1>
-			</div>
-		)
+		<div>
+			<h1>Hello</h1>
+			{posts.map((post) => (
+				<div key={String(post.id)}>{post.slug}</div>
+			))}
+		</div>
+	)
 }

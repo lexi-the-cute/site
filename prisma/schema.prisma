@@ -11,3 +11,8 @@ model test {
   id    BigInt  @id(map: "test_pk") @default(sequence())
   hello String?
 }
+
+model posts {
+  id   BigInt  @id(map: "posts_pk") @default(sequence())
+  slug String?
+}
