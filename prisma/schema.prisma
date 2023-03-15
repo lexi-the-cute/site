@@ -8,6 +8,6 @@ datasource db {
 }
 
 model test {
-  id    BigInt  @id(map: "test_pk") @default(autoincrement())
+  id    BigInt  @id(map: "test_pk") @default(sequence())
   hello String?
 }
