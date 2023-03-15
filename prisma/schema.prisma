@@ -1,0 +1,13 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "cockroachdb"
+  url      = env("DATABASE_URL")
+}
+
+model test {
+  id    BigInt  @id(map: "test_pk") @default(autoincrement())
+  hello String?
+}

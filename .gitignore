@@ -9,3 +9,6 @@ next-env.d.ts
 
 # Netlify folder
 .netlify/
+
+# Environment
+.env

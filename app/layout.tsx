@@ -1,3 +1,7 @@
+// Meta Tags (<meta name="robots" content="noindex">) (https://developers.google.com/search/docs/crawling-indexing/block-indexing): NoIndex, NoFollow, NoArchive, NoSnippet
+// Headers (https://developers.google.com/search/docs/crawling-indexing/block-indexing): X-Robots-Tag: noindex
+// Files: robots.txt, sitemap.xml, atom.xml
+// Hashtags; NoArchive, NoIndex, NoSearch, NoBot
 export const metadata = {
 	title: "Alexis' Site",
 	description: "A blog with ActivityPub support"
