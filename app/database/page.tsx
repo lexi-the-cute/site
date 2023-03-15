@@ -15,7 +15,7 @@ export default function Page({params}) {
 		
 		return (
 			<>
-				<h1>Hello</h1>
+				<h1>Hello {results}</h1>
 			</>
 		)
 	}).catch(function(err) {
