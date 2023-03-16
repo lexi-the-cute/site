@@ -20,6 +20,11 @@ export default function Page({params}) {
 	return ReadPostReact(params.slug).then(function(post) {
 		const names = ['Ada Lovelace', 'Grace Hopper', 'Margaret Hamilton'];
 
+		// https://github.com/remarkjs/remark-frontmatter
+		// post.data.matter
+		// console.log(post.data)
+		// TODO: See posts.ts
+		
 		return (
 			<>
 				<Header title={params.slug} />

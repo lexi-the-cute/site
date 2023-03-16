@@ -9,6 +9,7 @@ import {createElement, Fragment} from 'react';
 
 // Markdown to React
 import remarkParse from 'remark-parse';
+import remarkFrontmatter from 'remark-frontmatter'
 import remarkGfm from 'remark-gfm';
 import remarkRehype from 'remark-rehype';
 import rehypeSanitize from 'rehype-sanitize';
@@ -30,6 +31,7 @@ export function ReadPostReact(slug) {
 	
 	return unified()
 	.use(remarkParse)
+	.use(remarkFrontmatter)  // TODO: Put Frontmatter in VFile Data
 	.use(remarkGfm)
 	.use(remarkRehype)
 	.use(rehypeSanitize)
@@ -54,9 +56,10 @@ export function ReadPostHTML(slug) {
 	
 	return unified()
 	.use(remarkParse)
+	.use(remarkFrontmatter)  // TODO: Put Frontmatter in VFile Data
 	.use(remarkGfm)
 	.use(remarkRehype)
 	.use(rehypeSanitize)
-	.use(rehypeStringify)
+	.use(rehypeStringify)  // TODO: Modify Haste Tree Before Stringify
 	.process(fs.readFileSync(POST_PATH))
 }
