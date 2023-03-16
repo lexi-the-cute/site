@@ -1,7 +1,7 @@
 // https://beta.nextjs.org/docs/rendering/server-and-client-components
 // 
 
-import Favorites from '../../Favorites'
+import Favorites from '../../../lib/components/Favorites'
 
 function Header({ title }) {
 	return <h1>{title ? title : 'Default title'}</h1>;

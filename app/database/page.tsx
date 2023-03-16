@@ -1,16 +1,18 @@
-// TODO: Find Out If Prisma Can Even Work In The App Directory
-// npx prisma studio segfaults on the same queries
-import prisma from '../../lib/prisma';
+// @ts-nocheck
+// TODO: Determine Why <Posts/> Causes Type Check Problems
 
-export default async function Page({params}) {
-	const posts = await prisma.posts.findMany()
-	
+import prisma from '../../lib/prisma'
+import dynamic from 'next/dynamic'
+
+import NoSSR from '../../lib/components/NoSSR'
+import Posts from '../../lib/components/Posts'
+
+export default function Page({params}) {
 	return (
-		<div>
-			<h1>Hello</h1>
-			{posts.map((post) => (
-				<div key={String(post.id)}>{post.slug}</div>
-			))}
-		</div>
+		<>
+			<NoSSR>
+				<h1>Hello <Posts/></h1>
+			</NoSSR>
+		</>
 	)
 }

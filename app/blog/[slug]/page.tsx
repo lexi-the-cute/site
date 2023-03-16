@@ -7,7 +7,7 @@ import path from 'node:path';
 import { notFound } from 'next/navigation';
 
 // React Tags
-import Favorites from '../../Favorites';
+import Favorites from '../../../lib/components/Favorites'
 
 // Own Imports
 import { ReadPostReact, POSTS_PATH } from '../../../lib/posts'
