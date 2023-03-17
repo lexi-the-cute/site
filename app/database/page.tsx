@@ -1,18 +1,19 @@
 // @ts-nocheck
 // TODO: Determine Why <Posts/> Causes Type Check Problems
+import { Suspense, lazy } from 'react';
 
-import prisma from '../../lib/prisma'
-import dynamic from 'next/dynamic'
-
-import NoSSR from '../../lib/components/NoSSR'
-import Posts from '../../lib/components/Posts'
+const Posts = lazy(() => import('../../lib/components/Posts'));
 
 export default function Page({params}) {
 	return (
 		<>
-			<NoSSR>
+			<Suspense fallback={<Loading />}>
 				<h1>Hello <Posts/></h1>
-			</NoSSR>
+			</Suspense>
 		</>
 	)
+}
+
+function Loading() {
+	return <h2>Loading...</h2>
 }
