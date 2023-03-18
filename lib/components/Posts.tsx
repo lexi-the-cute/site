@@ -1,4 +1,4 @@
-import prisma from '../../lib/prisma'
+import prisma from '../prisma'
 
 export default function Posts({children}) {
 	return prisma.posts.findMany().then(function(posts) {

@@ -1,5 +1,5 @@
 generator client {
-  provider = "prisma-client-js"
+  provider   = "prisma-client-js"
   engineType = "binary"
 }
 
@@ -11,4 +11,12 @@ datasource db {
 model posts {
   id   BigInt  @id(map: "posts_pk") @default(sequence())
   slug String?
+}
+
+model links {
+  id   BigInt  @id @default(autoincrement())
+  page String
+  icon String?
+  text String?
+  url  String
 }
