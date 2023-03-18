@@ -29,7 +29,7 @@ export default async function Page({params}) {
 				<Suspense fallback={<Loading />}>
 					{links.map((link) => (
 						<div key={String(link.id)} className={`social-link page-${link.page}`}>
-							<Link href={link.url}><TablerIcons icon={link.icon}/>{link.text}</Link>
+							<Link rel="me" href={link.url}><TablerIcons icon={link.icon}/>{link.text}</Link>
 						</div>
 					))}
 				</Suspense>
