@@ -18,6 +18,7 @@ export default async function Page({params}) {
 	
 	return (
 		<div className="social-links">
+			{/* @ts-expect-error { <Loading /> causes missing property error on build } */}
 			<Suspense fallback={<Loading />}>
 				{links.map((link) => (
 					<div key={String(link.id)} className={`social-link page-${link.page}`}>
