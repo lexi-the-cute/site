@@ -8,15 +8,16 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model posts {
-  id   BigInt  @id(map: "posts_pk") @default(sequence())
-  slug String?
-}
-
 model links {
   id   BigInt  @id @default(autoincrement())
   page String
   icon String?
   text String?
   url  String
+}
+
+model authors {
+  id          BigInt  @id(map: "authors_pk") @default(autoincrement())
+  author      String  @unique(map: "authors_un")
+  pronouns_id String?
 }

@@ -2,6 +2,7 @@
 // 
 
 import Favorites from '../../../lib/components/Favorites'
+import Pronouns from '../../../lib/components/Pronouns'
 
 function Header({ title }) {
 	return <h1>{title ? title : 'Default title'}</h1>;
@@ -18,7 +19,8 @@ export default async function Page({params}) {
 					<li key={name}>{name}</li>
 				))}
 			</ul>
-			<Favorites>Author</Favorites>
+			<Favorites/>
+			<Pronouns author={params.author}/>
 		</div>
 	)
 }
