@@ -1,3 +1,3 @@
-export default function Loading({children}) {
+export default function Loading() {
 	return <h2>Loading...</h2>
 }

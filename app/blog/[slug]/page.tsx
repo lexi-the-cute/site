@@ -33,7 +33,7 @@ export default function Page({params}) {
 						<li key={name}>{name}</li>
 					))}
 				</ul>
-				<Favorites>{POSTS_PATH}</Favorites>
+				<Favorites/>
 				<div>
 					{post.result}
 				</div>

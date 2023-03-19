@@ -27,6 +27,10 @@ const nextConfig = {
 	experimental: {
 		appDir: true,
 	},
+	images: {
+		// dclu0bpcdglik.cloudfront.net is for pronouns.page
+		domains: ['dclu0bpcdglik.cloudfront.net']
+	},
 	async redirects() {
 		return [
 			{

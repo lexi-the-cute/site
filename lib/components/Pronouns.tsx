@@ -1,63 +1,37 @@
+import React from 'react'
+// import Image from 'next/image'
 import prisma from '../prisma'
 
-export default async function Pronouns({author}) {
-	if (!author)
-		return (
-			<div>
-				<h3>Missing Author Name</h3>
-			</div>
-		)
-	
-	try {
-		const id = await getID(author)
-		
-		return getPage(id).then(function(results) {
-			if (!results) {
-// 				console.log("No Data Found!")
-				return (
-					<div>
-						<h3>Profile Does Not Exist</h3>
-					</div>
-				)
-			}
-				
-			const avatar = results.avatar
-			const lang = "en"
-			const names = results.profiles[lang].names
-			const pronouns = results.profiles[lang].pronouns
-			const description = results.profiles[lang].description
-			const age = results.profiles[lang].age
-			const links = results.profiles[lang].links
-			const flags = results.profiles[lang].flags
-			
-			return (
-				<div>
-					<img src={avatar}></img>
-				</div>
-			);
-		})
-	} catch(error) {
-		// Database Error (e.g. table does not exist)
-		console.error(`Database Error: '${error}' on Page '/author/${author}'. Try checking if your authors table exists...`)
-		
-		return (
-			<div>
-				<h3>Unable To Retrieve Profile Data</h3>
-			</div>
-		)
-	}
+import { Suspense, lazy } from 'react'
+import Loading from './Loading'
+
+export default function Pronouns({author}) : React.ReactElement<any, any> {	
+	return (
+		<Suspense fallback={<Loading />}>
+			{ /* This is a known issue: https://github.com/vercel/next.js/issues/42292#issuecomment-1298459024 */ }
+			{ /* @ts-expect-error Typescript Doesn't Like Promise<Element> */ }
+			<BuildCard author={author}/>
+		</Suspense>
+	)
 }
 
-async function getPage(id) {
-	const url = `https://pronouns.page/api/profile/get-id/${id}?version=2`
-	
-	const res = await fetch(url)
-	const data = await res.json()
-	
-	if (!data.id)
-		return null
-	
-	return data
+async function BuildCard({author}) {
+	return getData(author).then(function(results) {
+		if (typeof results.error !== "undefined") {
+			return (
+				<div>
+					<h3>{results.error}</h3>
+				</div>
+			)
+		}
+		
+		return (
+			<div>
+				{/* TODO: Determine Size of Image For Card Before Using next/image (probably fill into css determined div */}
+				<img alt={results.alt} src={results.avatar} className="pronouns-pfp"></img>
+			</div>
+		)
+	})
 }
 
 function getID(author) {
@@ -76,4 +50,54 @@ function getID(author) {
 	}).catch(function(error) {
 		return error
 	})
+}
+
+function getPage(id) {
+	const url = `https://pronouns.page/api/profile/get-id/${id}?version=2`
+	
+	return fetch(url).then(function(res) {
+		return res.json().then(function(data) {
+			if (!data.id)
+				return null
+			
+			return data
+		})
+	})
+}
+
+async function getData(author) {
+	if (!author)
+		return {"error": "Missing Author Name"}
+	
+	try {
+		const id = await getID(author)
+		const results = await getPage(id)
+		
+		if (!results) {
+// 			console.log("No Data Found!")
+			return {"error": "Profile Does Not Exist"}
+		}
+		
+		const avatar = results.avatar
+		const lang = "en"
+		const alt = `Profile picture of ${author} from pronouns.page`
+		
+		const names = results.profiles[lang].names
+		const pronouns = results.profiles[lang].pronouns
+		const description = results.profiles[lang].description
+		
+		return {
+			"avatar": avatar,
+			"name": names, // TODO: Parse out best name to use
+			"pronouns": pronouns, // TODO: Parse out pronouns as string (e.g. she/her)
+			"description": description,
+			"lang": lang,
+			"alt": alt
+		}
+	} catch(error) {
+		// Database Error (e.g. table does not exist)
+		console.error(`Database Error: '${error}' on Page '/author/${author}'. Try checking if your authors table exists...`)
+		
+		return {"error": "Unable To Retrieve Profile Data"}
+	}
 }

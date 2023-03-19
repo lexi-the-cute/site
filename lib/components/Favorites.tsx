@@ -1,9 +1,9 @@
 'use client';
 
-export default function Favorites({children}) {
+export default function Favorites() {
 	return (
 		<>
-			{children}
+			<h3>Favorites Go Here</h3>
 		</>
 	);
 }
