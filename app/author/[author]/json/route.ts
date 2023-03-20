@@ -13,14 +13,10 @@ function parseImageJSON(json, domain) {
 	const image = JSON.parse(json)
 	image.type = "Image"
 	
-	let image_url
-	if(image.url.startsWith("/")) {
-		image_url = new URL(`${domain}${image.url}`)
-	} else {
-		image_url = new URL(image.url)
-	}
+	if(image.url.startsWith("/"))
+		image.url = new URL(`${domain}${image.url}`)
 	
-	return image_url.href
+	return image
 }
 
 function parseProperties(json) {
