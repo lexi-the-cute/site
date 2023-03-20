@@ -24,7 +24,7 @@ function parseImageJSON(json, domain) {
 }
 
 function parseProperties(json) {
-	const properties = []
+	const properties: { type: string; name: any; value: any; }[] = []
 	for(const property of JSON.parse(json)) {
 		properties.push({
 			type: "PropertyValue",
