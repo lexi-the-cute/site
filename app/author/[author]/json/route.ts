@@ -1,10 +1,13 @@
+import { notFound } from 'next/navigation';
 import prisma from '../../../../lib/prisma';
 import { type NextRequest } from 'next/server';
 
 function getData(author) {
 	return prisma.authors.findUnique({where: {author: author}}).then(function(results) {
+// 		console.log("Results:", results)
 		return results
 	}).catch(function(error) {
+// 		console.log("Error:", error)
 		return error
 	})
 }
@@ -40,6 +43,7 @@ function getContext() {
 	 * toot: https://docs.joinmastodon.org/spec/activitypub/ (http://joinmastodon.org/ns#)
 	 * misskey: https://misskey-hub.net/ns#
 	 * schema: http://schema.org#
+	 * ostatus: http://ostatus.org#
 	 * fedibird: http://fedibird.com/ns#
 	 * vcard: http://www.w3.org/2006/vcard/ns#
 	 */
@@ -56,6 +60,7 @@ function getContext() {
 			"blog": "https://blog.alexisart.me/ns#", // TODO: Replace "blog" with a more specific string to deal with lazy parsers
 			
 			// Unknown If Will Use
+			"ostatus": "http://ostatus.org#",  // This website is now filled with spam
 			"fedibird": "http://fedibird.com/ns#",
 			"schema": "http://schema.org#",
 			"vcard": "http://www.w3.org/2006/vcard/ns#",
@@ -70,8 +75,15 @@ function getContext() {
 
 export async function GET(req: NextRequest, {params}) {
 	const data = await getData(params.author)
-	
-	// TODO: Check error
+	if(!data) {
+		const response = {error: "Not Found"}
+		return new Response(JSON.stringify(response, null, 2), {
+			status: 404,
+			headers: {
+				"Content-Type": "application/json; charset=utf-8"
+			}
+		});
+	}
 	
 	// TODO: Determine Protocol on Netlify Without Environment Var...
 	// ...(req.connection.encrypted ? "https" : "http") worked when I was using API pages

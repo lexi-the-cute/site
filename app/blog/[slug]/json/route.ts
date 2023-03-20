@@ -1,5 +1,4 @@
 // Next Imports
-import { notFound } from 'next/navigation';
 import { type NextRequest } from 'next/server';
 
 // Own Imports
@@ -78,6 +77,12 @@ export function GET(req: NextRequest, {params}) {
 	}).catch(function(error) {
 		// Post does not exist.
 
-		notFound();
+		const response = {error: "Not Found"}
+		return new Response(JSON.stringify(response, null, 2), {
+			status: 404,
+			headers: {
+				"Content-Type": "application/json; charset=utf-8"
+			}
+		});
 	})
 };
