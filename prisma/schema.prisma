@@ -17,7 +17,17 @@ model links {
 }
 
 model authors {
-  id          BigInt  @id(map: "authors_pk") @default(autoincrement())
-  author      String  @unique(map: "authors_un")
-  pronouns_id String?
+  id           BigInt   @id(map: "authors_pk") @default(autoincrement())
+  author       String   @unique(map: "authors_un")
+  pronouns_id  String?
+  display_name String?
+  publickey    String?
+  privatekey   String?
+  summary      String?
+  icon         String?
+  header       String?
+  properties   String?
+  published    String?
+  cat          Boolean?
+  account_type String
 }

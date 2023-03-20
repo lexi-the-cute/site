@@ -1,78 +1,116 @@
+import prisma from '../../../../lib/prisma';
 import { type NextRequest } from 'next/server';
 
-export function GET(req: NextRequest, {params}) {
-	const url = new URL(req.url)
+function getData(author) {
+	return prisma.authors.findUnique({where: {author: author}}).then(function(results) {
+		return results
+	}).catch(function(error) {
+		return error
+	})
+}
+
+function parseImageJSON(json, domain) {
+	const image = JSON.parse(json)
+	image.type = "Image"
+	
+	let image_url
+	if(image.url.startsWith("/")) {
+		image_url = new URL(`${domain}${image.url}`)
+	} else {
+		image_url = new URL(image.url)
+	}
+	
+	return image_url.href
+}
+
+function parseProperties(json) {
+	const properties = []
+	for(const property of JSON.parse(json)) {
+		properties.push({
+			type: "PropertyValue",
+			name: property.key,
+			value: property.value
+		})
+	}
+	
+	return properties
+}
+
+function getContext() {
+	/* TODO: Check Everything In
+	 * as: https://www.w3.org/TR/activitypub/
+	 * https://w3id.org/security/v1
+	 * 
+	 * toot: https://docs.joinmastodon.org/spec/activitypub/ (http://joinmastodon.org/ns#)
+	 * misskey: https://misskey-hub.net/ns#
+	 * schema: http://schema.org#
+	 * fedibird: http://fedibird.com/ns#
+	 * vcard: http://www.w3.org/2006/vcard/ns#
+	 */
+	
+	// `as:` refers to https://www.w3.org/ns/activitystreams
+	
+	return [
+		"https://www.w3.org/ns/activitystreams",
+		"https://w3id.org/security/v1",
+		{
+			// Actively Uses
+			"toot": "http://joinmastodon.org/ns#",
+			"misskey": "https://misskey-hub.net/ns#",
+			"blog": "https://blog.alexisart.me/ns#",
+			
+			// Unknown If Will Use
+			"fedibird": "http://fedibird.com/ns#",
+			"schema": "http://schema.org#",
+			"vcard": "http://www.w3.org/2006/vcard/ns#",
+			
+			// Used Context Items
+			"Emoji": "toot:Emoji",
+			"isCat": "misskey:isCat",
+			"animal": "blog:animal"
+		}
+	]
+}
+
+export async function GET(req: NextRequest, {params}) {
+	const data = await getData(params.author)
+	
+	// TODO: Check error
 	
 	// TODO: Determine Protocol on Netlify Without Environment Var...
 	// ...(req.connection.encrypted ? "https" : "http") worked when I was using API pages
-	const proto = process.env.PROTOCOL || req.headers["x-forwarded-proto"] || url.protocol.split(":")[0]
-	url.protocol = proto
+	const id = new URL(req.url)
+	id.protocol = process.env.PROTOCOL || req.headers["x-forwarded-proto"] || id.protocol.split(":")[0]
 	
-	const host = req.headers["host"] || url.host
-	const slug = params.author
-	
-	const domain = `${proto}://${host}`
-	
-	const author = `${domain}/author/${slug}`
-	const publickey = typeof process.env.ActivityPubPublicKey !== "undefined" ? process.env.ActivityPubPublicKey.replace(/\\n/g, '\n') : ""
-	
-	const name = `${slug} <demo>`
-	const message = `<p>This is a test post under the slug, "${slug}"</p>`
-	const summary = `<p>I'm an author which can be found on <span class="h-card"><a href="https://chat.alexisart.me/@alexis" class="u-url mention">@<span>alexis</span></a></span>.</p>`
-	
-	const icon = `${domain}/images/logo.png`
-	const header = `${domain}/images/header.png`
-	const donate = `<a href="https://ko-fi.com/alexisartdesign" target="_blank" rel="nofollow noopener noreferrer me"><span class="invisible">https://</span><span class="">ko-fi.com/alexisartdesign</span><span class="invisible"></span></a>`
-	const published = "2023-03-09T00:00:00Z"
-	const isCat = true
+	const domain = `${id.protocol}//${id.host}`
 	
 	const response = {
-		"@context": [
-			"https://www.w3.org/ns/activitystreams",
-			"https://w3id.org/security/v1",
-			{
-				"isCat": "misskey:isCat"
-			}
-		],
-		"id": url,
-		"type": "Service",
-		"preferredUsername": slug,
-		"url": author,
-		"inbox": `${url}/inbox`,
-		"outbox": `${url}/outbox`,
-		"following": `${url}/following`,
-		"followers": `${url}/followers`,
-		"liked": `${url}/liked`,
+		"@context": getContext(),
+		"id": id,
+		"type": data.account_type,
+		"preferredUsername": params.author,
+		"url": `${domain}/author/${params.author}`,
+		"inbox": `${id}/inbox`,
+		"outbox": `${id}/outbox`,
+		"following": `${id}/following`,
+		"followers": `${id}/followers`,
+		"liked": `${id}/liked`,
 		"publicKey": {
-			"id": `${url}#main-key`,
-			"owner": url,
-			"publicKeyPem": publickey
+			"id": `${id}#main-key`,
+			"owner": id,
+			"publicKeyPem": data.publickey
 		},
 		"endpoints": {
 			"sharedInbox": `${domain}/inbox`
 		},
 		
-		"name": name,
-		"summary": summary,
-		"published": published,
-		"isCat": isCat,
-		"icon": {
-			"type": "Image",
-			"mediaType": "image/png",
-			"url": icon
-		},
-		"image": {
-			"type": "Image",
-			"mediaType": "image/png",
-			"url": header
-		},
-		"attachment": [
-			{
-				"type": "PropertyValue",
-				"name": "Donate",
-				"value": donate
-			}
-		],
+		"name": data.display_name,
+		"summary": data.summary,
+		"published": data.published,
+		"isCat": data.cat,  // TODO: Replace isCat with proper standard. https://codeberg.org/calckey/calckey/issues/9657#issuecomment-846318
+		"icon": parseImageJSON(data.icon, domain),
+		"image": parseImageJSON(data.header, domain),
+		"attachment": parseProperties(data.properties),
 		"tag": [
 // 			{
 // 				"id": `${domain}/emojis/blog`,
