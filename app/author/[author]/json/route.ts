@@ -57,7 +57,7 @@ function getContext() {
 			// Actively Uses
 			"toot": "http://joinmastodon.org/ns#",
 			"misskey": "https://misskey-hub.net/ns#",
-			"blog": "https://blog.alexisart.me/ns#",
+			"blog": "https://blog.alexisart.me/ns#", // TODO: Replace "blog" with a more specific string to deal with lazy parsers
 			
 			// Unknown If Will Use
 			"fedibird": "http://fedibird.com/ns#",
