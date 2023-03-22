@@ -30,4 +30,13 @@ model authors {
   published    String?
   cat          Boolean?
   account_type String
+  domain       String?
+  updated      String?
+  uri          String?
+  url          String?
+  inbox        String?
+  outbox       String?
+  following    String?
+  followers    String?
+  shared       String?
 }
