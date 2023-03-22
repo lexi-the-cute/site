@@ -1,4 +1,8 @@
-import { authors } from '@prisma/client';
+// Node Imports
+import fs from 'node:fs';
+import path from 'node:path';
+
+import { authors, posts } from '@prisma/client';
 import prisma from './prisma';
 import { type NextRequest } from 'next/server';
 
@@ -42,28 +46,55 @@ export function getContext(): {}[] {
 }
 
 export async function getAuthor(author: string): Promise<Response|authors> {
-    const data = await prisma.authors.findUnique({where: {author: author}})
-	if(!data) {
-		const response = {error: "Not Found"}
-		return new Response(JSON.stringify(response, null, 2), {
-			status: 404,
-			headers: {
-				"Content-Type": "application/json; charset=utf-8"
-			}
-		});
-	}
+	const domain = null
+    const data: authors|null = await prisma.authors.findUnique({where: {author: author, domain: domain}})
+	if(!data)
+		return notFoundJSON()
 
     return data
 }
 
-export function getPost() {
-	const response = {error: "Not Implemented"}
-	return new Response(JSON.stringify(response, null, 2), {
-		status: 401,
-		headers: {
-			"Content-Type": "application/activity+json; charset=utf-8"
-		}
-	});
+export async function getAuthorID(author: string): Promise<Response|bigint> {
+	const data: Response|authors = await getAuthor(author)
+
+	// If Response, Just Pass It On
+	if (data instanceof Response)
+		return data
+
+	return data.id
+}
+
+export async function getPost(slug: string): Promise<never|posts> {
+	const data: posts|null = await prisma.posts.findUnique({where: {slug: slug}})
+	if(!data)
+		return Promise.reject(notFoundJSON())
+
+    return data
+}
+
+export async function getPostsByAuthor(author: string): Promise<Response|posts[]> {
+	const id: Response|bigint = await getAuthorID(author)
+
+	// If Response, Just Pass It On
+	if (id instanceof Response)
+		return id
+
+	const data: posts[]|null = await prisma.posts.findMany({where: {author: id}})
+
+	if(!data)
+		return notFoundJSON()
+
+    return data
+}
+
+export function getPostFile(slug: string): Promise<never>|Buffer {
+	const POSTS_PATH = path.join(process.cwd(), 'posts');
+	const POST_PATH = path.join(POSTS_PATH, `${slug}.mdx`)
+	
+	if (!fs.existsSync(POST_PATH))
+		return Promise.reject("Post does not exist")
+
+	return fs.readFileSync(POST_PATH)
 }
 
 export function parseImageJSON(json, domain) {
@@ -97,4 +128,14 @@ export function getURL(req: NextRequest): URL {
 	url.host = req.headers["Host"] || url.host  // id.host acts weird with more than one host on Netlify
 
     return url
+}
+
+function notFoundJSON(): Response {
+	const response = {error: "Not Found"}
+	return new Response(JSON.stringify(response, null, 2), {
+		status: 404,
+		headers: {
+			"Content-Type": "application/json; charset=utf-8"
+		}
+	});
 }

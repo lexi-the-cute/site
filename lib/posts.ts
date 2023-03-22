@@ -1,7 +1,3 @@
-// Node Imports
-import fs from 'node:fs';
-import path from 'node:path';
-
 // React Imports
 import React from 'react';
 import {unified} from 'unified';
@@ -20,15 +16,11 @@ import rehypeStringify from 'rehype-stringify';
 import Link from 'next/link';
 import Image from 'next/image';
 
-export const POSTS_PATH = path.join(process.cwd(), 'posts');
+// Own Imports
+import * as functions from './functions';
 
-export function ReadPostReact(slug) {
-	const POST_PATH = path.join(POSTS_PATH, `${slug}.mdx`)
-	
-	if (!fs.existsSync(POST_PATH)) {
-		return Promise.reject("Post does not exist")
-	}
-	
+
+export async function ReadPostReact(slug: string) {
 	return unified()
 	.use(remarkParse)
 	.use(remarkFrontmatter)  // TODO: Put Frontmatter in VFile Data
@@ -44,16 +36,10 @@ export function ReadPostReact(slug) {
 // 			img: Image
 		}
 	})
-	.process(fs.readFileSync(POST_PATH))
+	.process(await functions.getPost(slug))
 }
 
-export function ReadPostHTML(slug) {
-	const POST_PATH = path.join(POSTS_PATH, `${slug}.mdx`)
-	
-	if (!fs.existsSync(POST_PATH)) {
-		return Promise.reject("Post does not exist")
-	}
-	
+export async function ReadPostHTML(slug: string) {
 	return unified()
 	.use(remarkParse)
 	.use(remarkFrontmatter)  // TODO: Put Frontmatter in VFile Data
@@ -61,5 +47,5 @@ export function ReadPostHTML(slug) {
 	.use(remarkRehype)
 	.use(rehypeSanitize)
 	.use(rehypeStringify)  // TODO: Modify Haste Tree Before Stringify
-	.process(fs.readFileSync(POST_PATH))
+	.process(await functions.getPost(slug))
 }

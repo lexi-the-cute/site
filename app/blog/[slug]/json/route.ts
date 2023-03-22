@@ -5,13 +5,12 @@ import { type NextRequest } from 'next/server';
 import { ReadPostHTML } from '../../../../lib/posts';
 import * as functions from '../../../../lib/functions';
 
-export function GET(req: NextRequest, {params}) {
+export async function GET(req: NextRequest, {params}) {
 	const id = functions.getURL(req)
 	const slug = params.slug
 	
 	const domain = `${id.protocol}://${id.host}`
 	const url = `${domain}/blog/${slug}`
-	
 	
 	return ReadPostHTML(slug).then(function(post) {
 		const author = `${domain}/author/alexis/json`

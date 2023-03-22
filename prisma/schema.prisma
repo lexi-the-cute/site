@@ -8,25 +8,17 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model links {
-  id   BigInt  @id @default(autoincrement())
-  page String
-  icon String?
-  text String?
-  url  String
-}
-
 model authors {
   id           BigInt   @id(map: "authors_pk") @default(autoincrement())
-  author       String   @unique(map: "authors_un")
+  author       String
   pronouns_id  String?
   display_name String?
   publickey    String?
   privatekey   String?
   summary      String?
-  icon         String?
-  header       String?
-  properties   String?
+  icon         Json?
+  header       Json?
+  properties   Json?
   published    String?
   cat          Boolean?
   account_type String
@@ -39,4 +31,24 @@ model authors {
   following    String?
   followers    String?
   shared       String?
+
+  @@unique([author, domain], map: "authors_un")
+}
+
+model links {
+  id   BigInt  @id @default(autoincrement())
+  page String
+  icon String?
+  text String?
+  url  String
+}
+
+model posts {
+  id        BigInt  @id(map: "posts_pk") @default(autoincrement())
+  published String
+  slug      String  @unique(map: "posts_un")
+  author    BigInt
+  sensitive Boolean @default(false)
+  content   String
+  tag       Json?
 }
