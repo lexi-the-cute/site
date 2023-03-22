@@ -2,7 +2,7 @@ import { type NextRequest } from 'next/server';
 
 export function GET(req: NextRequest, {params}) {
 	const response = {
-		activity: "page"
+		error: "Not Implemented"
 	}
 	
 	return new Response(JSON.stringify(response, null, 2), {

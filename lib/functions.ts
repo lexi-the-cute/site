@@ -1,5 +1,5 @@
 import { authors } from '@prisma/client';
-import prisma from '../../../../lib/prisma';
+import prisma from './prisma';
 import { type NextRequest } from 'next/server';
 
 
@@ -41,12 +41,8 @@ export function getContext(): {}[] {
 	]
 }
 
-async function getData(author: string): Promise<authors|null> {
-	return await prisma.authors.findUnique({where: {author: author}})
-}
-
 export async function getAuthor(author: string): Promise<Response|authors> {
-    const data = await getData(author)
+    const data = await prisma.authors.findUnique({where: {author: author}})
 	if(!data) {
 		const response = {error: "Not Found"}
 		return new Response(JSON.stringify(response, null, 2), {
@@ -58,6 +54,16 @@ export async function getAuthor(author: string): Promise<Response|authors> {
 	}
 
     return data
+}
+
+export function getPost() {
+	const response = {error: "Not Implemented"}
+	return new Response(JSON.stringify(response, null, 2), {
+		status: 401,
+		headers: {
+			"Content-Type": "application/activity+json; charset=utf-8"
+		}
+	});
 }
 
 export function parseImageJSON(json, domain) {

@@ -1,4 +1,4 @@
-import * as functions from './functions';
+import * as functions from '../../../../lib/functions';
 import { authors } from '@prisma/client';
 import { type NextRequest } from 'next/server';
 

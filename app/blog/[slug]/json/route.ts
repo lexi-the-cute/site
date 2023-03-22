@@ -2,21 +2,15 @@
 import { type NextRequest } from 'next/server';
 
 // Own Imports
-import { ReadPostHTML, POSTS_PATH } from '../../../../lib/posts'
+import { ReadPostHTML } from '../../../../lib/posts';
+import * as functions from '../../../../lib/functions';
 
 export function GET(req: NextRequest, {params}) {
-	const url = new URL(req.url)
-	
-	// TODO: Determine Protocol on Netlify Without Environment Var...
-	// ...(req.connection.encrypted ? "https" : "http") worked when I was using API pages
-	const proto = process.env.PROTOCOL || req.headers["x-forwarded-proto"] || url.protocol.split(":")[0]
-	url.protocol = proto
-	
-	const host = req.headers["host"] || url.host
+	const id = functions.getURL(req)
 	const slug = params.slug
 	
-	const domain = `${proto}://${host}`
-	const page = `${domain}/blog/${slug}`
+	const domain = `${id.protocol}://${id.host}`
+	const url = `${domain}/blog/${slug}`
 	
 	
 	return ReadPostHTML(slug).then(function(post) {
@@ -26,24 +20,13 @@ export function GET(req: NextRequest, {params}) {
 		const message = String(post)
 		
 		const response = {
-			"@context": [
-				"https://www.w3.org/ns/activitystreams",
-				{
-					"ostatus": "http://ostatus.org#",
-					"atomUri": "ostatus:atomUri",
-					"inReplyToAtomUri": "ostatus:inReplyToAtomUri",
-					"conversation": "ostatus:conversation",
-					"sensitive": "as:sensitive",
-					"toot": "http://joinmastodon.org/ns#",
-					"Emoji": "toot:emoji"
-				}
-			],
-			"id": url,
+			"@context": functions.getContext(),
+			"id": id,
 			"type": "Note",
 			"summary": null,
 			"inReplyTo": null,
 			"published": "2023-03-06T00:00:00Z",
-			"url": page,
+			"url": url,
 			"attributedTo": author,
 			"to": [
 				"https://www.w3.org/ns/activitystreams#Public"
