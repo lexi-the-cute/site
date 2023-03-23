@@ -4,6 +4,8 @@ import { type NextRequest } from 'next/server';
 // Own Imports
 import { ReadPostHTML } from '../../../../lib/posts';
 import * as functions from '../../../../lib/functions';
+import * as activitypub from '../../../../lib/activitypub';
+import { authors } from '@prisma/client';
 
 export async function GET(req: NextRequest, {params}) {
 	const id = functions.getURL(req)
@@ -12,43 +14,29 @@ export async function GET(req: NextRequest, {params}) {
 	const domain = `${id.protocol}://${id.host}`
 	const url = `${domain}/blog/${slug}`
 	
-	return ReadPostHTML(slug).then(function(post) {
-		const author = `${domain}/author/alexis/json`
-		const followers = `${author}/followers`
-		
-		const message = String(post)
-		
-		const response = {
-			"@context": functions.getContext(),
-			"id": id,
-			"type": "Note",
-			"summary": null,
-			"inReplyTo": null,
-			"published": "2023-03-06T00:00:00Z",
-			"url": url,
-			"attributedTo": author,
-			"to": [
-				"https://www.w3.org/ns/activitystreams#Public"
-			],
-			"cc": [
-				followers
-			],
-			"sensitive": false,
-			"content": message,
-			"tag": [
-// 				{
-// 					"id": `${domain}/emojis/blog`,
-// 					"type": "Emoji",
-// 					"name": ":blog:",
-// 					"updated": "2023-02-25T19:36:09Z",
-// 					"icon": {
-// 						"type": "Image",
-// 						"mediaType": "image/png",
-// 						"url": `${domain}/images/emojis/blog`
-// 					}
-// 				}
-			]
+	return ReadPostHTML(slug).then(async function(post) {
+		const author_data: Response|authors = await functions.getAuthorByID(post.author)
+
+		// If Response, Just Pass it On
+		if (author_data instanceof Response)
+			return author_data
+
+		const author_name = author_data.author
+		const author = `${domain}/author/${author_name}/json`
+		const tag = post.tag ? post.tag : []
+
+		// context: string, id: string, published: string, author: string, sensitive: boolean, content: string, tag: []
+		const note: activitypub.Note = {
+			context: activitypub.getContext(),
+			id: id,
+			published: post.published,
+			url: url,
+			author: author,
+			sensitive: post.sensitive,
+			content: String(post.rendered),
+			tag: []
 		}
+		const response = activitypub.createNote(note)
 		
 		return new Response(JSON.stringify(response, null, 2), {
 			status: 200,
@@ -58,13 +46,6 @@ export async function GET(req: NextRequest, {params}) {
 		});
 	}).catch(function(error) {
 		// Post does not exist.
-
-		const response = {error: "Not Found"}
-		return new Response(JSON.stringify(response, null, 2), {
-			status: 404,
-			headers: {
-				"Content-Type": "application/json; charset=utf-8"
-			}
-		});
+		return functions.notFoundJSON();
 	})
 };

@@ -1,6 +1,5 @@
 // https://beta.nextjs.org/docs/rendering/server-and-client-components
 
-import Favorites from '../../../lib/components/Favorites'
 import Pronouns from '../../../lib/components/Pronouns'
 
 function Header({ title }) {

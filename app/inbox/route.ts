@@ -1,11 +1,6 @@
 import { type NextRequest } from 'next/server';
+import * as functions from '../../lib/functions';
 
 export async function GET(req: NextRequest, {params}) {
-	const response = {error: "Not Implemented"}
-	return new Response(JSON.stringify(response, null, 2), {
-		status: 501,
-		headers: {
-			"Content-Type": "application/json; charset=utf-8"
-		}
-	});
+	return functions.notImplementedJSON()
 }

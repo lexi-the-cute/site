@@ -6,48 +6,9 @@ import { authors, posts } from '@prisma/client';
 import prisma from './prisma';
 import { type NextRequest } from 'next/server';
 
-
-export function getContext(): {}[] {
-	/* TODO: Check Everything In
-	 * as: https://www.w3.org/TR/activitypub/
-	 * https://w3id.org/security/v1
-	 * 
-	 * toot: https://docs.joinmastodon.org/spec/activitypub/ (http://joinmastodon.org/ns#)
-	 * misskey: https://misskey-hub.net/ns#
-	 * schema: http://schema.org#
-	 * ostatus: http://ostatus.org#
-	 * fedibird: http://fedibird.com/ns#
-	 * vcard: http://www.w3.org/2006/vcard/ns#
-	 */
-	
-	// `as:` refers to https://www.w3.org/ns/activitystreams
-
-	return [
-		"https://www.w3.org/ns/activitystreams",
-		"https://w3id.org/security/v1",
-		{
-			// Actively Uses
-			"toot": "http://joinmastodon.org/ns#",
-			"misskey": "https://misskey-hub.net/ns#",
-			"blog": "https://blog.alexisart.me/ns#", // TODO: Replace "blog" with a more specific string to deal with lazy parsers
-			
-			// Unknown If Will Use
-			"ostatus": "http://ostatus.org#",  // This website is now filled with spam
-			"fedibird": "http://fedibird.com/ns#",
-			"schema": "http://schema.org#",
-			"vcard": "http://www.w3.org/2006/vcard/ns#",
-			
-			// Used Context Items
-			"Emoji": "toot:Emoji",
-			"isCat": "misskey:isCat",
-			"animal": "blog:animal"
-		}
-	]
-}
-
 export async function getAuthor(author: string): Promise<Response|authors> {
 	const domain = null
-    const data: authors|null = await prisma.authors.findUnique({where: {author: author, domain: domain}})
+    const data: authors|null = await prisma.authors.findFirst({where: {author: author, domain: domain}})
 	if(!data)
 		return notFoundJSON()
 
@@ -62,6 +23,14 @@ export async function getAuthorID(author: string): Promise<Response|bigint> {
 		return data
 
 	return data.id
+}
+
+export async function getAuthorByID(id: bigint): Promise<Response|authors> {
+    const data: authors|null = await prisma.authors.findUnique({where: {id: id}})
+	if(!data)
+		return notFoundJSON()
+
+    return data
 }
 
 export async function getPost(slug: string): Promise<never|posts> {
@@ -130,12 +99,22 @@ export function getURL(req: NextRequest): URL {
     return url
 }
 
-function notFoundJSON(): Response {
+export function notFoundJSON(): Response {
 	const response = {error: "Not Found"}
 	return new Response(JSON.stringify(response, null, 2), {
 		status: 404,
 		headers: {
 			"Content-Type": "application/json; charset=utf-8"
+		}
+	});
+}
+
+export function notImplementedJSON(): Response {
+	const response = {error: "Not Implemented"}
+	return new Response(JSON.stringify(response, null, 2), {
+		status: 501,
+		headers: {
+			"Content-Type": "application/activity+json; charset=utf-8"
 		}
 	});
 }

@@ -10,14 +10,16 @@ import { notFound } from 'next/navigation';
 import Favorites from '../../../lib/components/Favorites'
 
 // Own Imports
-import { ReadPostReact, POSTS_PATH } from '../../../lib/posts'
+import { ReadPostReact } from '../../../lib/posts'
+import * as functions from '../../../lib/functions';
+import { authors } from '@prisma/client';
 
 function Header({ title }) {
 	return <h1>{title ? title : 'Default title'}</h1>;
 }
 
-export default function Page({params}) {
-	return ReadPostReact(params.slug).then(function(post) {
+export default async function Page({params}) {
+	return ReadPostReact(params.slug).then(async function(post) {
 		const names = ['Ada Lovelace', 'Grace Hopper', 'Margaret Hamilton'];
 
 		// https://github.com/remarkjs/remark-frontmatter
@@ -25,9 +27,21 @@ export default function Page({params}) {
 		// console.log(post.data)
 		// TODO: See posts.ts
 		
+		const slug = params.slug
+		const published = post.published
+		const author: Response|authors = await functions.getAuthorByID(post.author)
+		const sensitive = post.sensitive
+		const tag = post.tag
+
+		// TODO: Figure out why this breaks on file save
+		if (author instanceof Response) {
+			console.error(`Author '${post.author}' not found!`)
+			notFound()
+		}
+
 		return (
 			<>
-				<Header title={params.slug} />
+				<Header title={`${slug} by ${author.display_name}`} />
 				<ul>
 					{names.map((name) => (
 						<li key={name}>{name}</li>
@@ -35,7 +49,7 @@ export default function Page({params}) {
 				</ul>
 				<Favorites/>
 				<div>
-					{post.result}
+					{post.rendered.result}
 				</div>
 			</>
 		)
