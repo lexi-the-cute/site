@@ -56,6 +56,15 @@ export async function getPostsByAuthor(author: string): Promise<Response|posts[]
     return data
 }
 
+export async function getFollowers(author: string): Promise<Response|authors> {
+	const domain = null
+    const data: authors|null = await prisma.authors.findFirst({where: {author: author, domain: domain}})
+	if(!data)
+		return notFoundJSON()
+
+    return data
+}
+
 export function getPostFile(slug: string): Promise<never>|Buffer {
 	const POSTS_PATH = path.join(process.cwd(), 'posts');
 	const POST_PATH = path.join(POSTS_PATH, `${slug}.mdx`)

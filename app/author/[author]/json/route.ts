@@ -23,7 +23,6 @@ export async function GET(req: NextRequest, {params}) {
 		"outbox": `${id}/outbox`,
 		"following": `${id}/following`,
 		"followers": `${id}/followers`,
-		"featured": `${id}/featured`,
 		"publicKey": {
 			"id": `${id}#main-key`,
 			"owner": id,

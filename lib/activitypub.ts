@@ -15,6 +15,16 @@ export type Create = {
     note: {}  // See about making a standard type for this
 }
 
+export type Followers = {
+    id: URL,
+    total: number
+}
+
+export type Followings = {
+    id: URL,
+    total: number
+}
+
 export async function createNote(note: Note): Promise<{}> {
     // TODO: Determine if Will Ever Need To Change Visibility Of Posts
     // Note: Mentions Will Not Be Implemented
@@ -105,4 +115,22 @@ export function getContext(): {}[] {
             }
 		}
 	]
+}
+
+export async function getFollowers(followers: Followers): Promise<{}> {
+    return {
+        "@context": "https://www.w3.org/ns/activitystreams",
+        "id": followers.id,
+        "type": "Collection",
+        "totalItems": followers.total
+    }
+}
+
+export async function getFollowings(followings: Followings): Promise<{}> {
+    return {
+        "@context": "https://www.w3.org/ns/activitystreams",
+        "id": followings.id,
+        "type": "Collection",
+        "totalItems": followings.total
+    }
 }
