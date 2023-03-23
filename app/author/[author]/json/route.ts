@@ -1,4 +1,5 @@
 import * as functions from '../../../../lib/functions';
+import * as activitypub from '../../../../lib/activitypub';
 import { authors } from '@prisma/client';
 import { type NextRequest } from 'next/server';
 
@@ -13,7 +14,7 @@ export async function GET(req: NextRequest, {params}) {
 	const domain = `${id.protocol}//${id.host}`
 	
 	const response = {
-		"@context": functions.getContext(),
+		"@context": activitypub.getContext(),
 		"id": id,
 		"type": data.account_type,
 		"preferredUsername": params.author,
