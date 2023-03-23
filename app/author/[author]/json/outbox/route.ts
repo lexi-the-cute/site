@@ -16,17 +16,18 @@ function getPosts(req: NextRequest, items: {}[]) {
 	  }
 }
 
-function getNote(req: NextRequest, author: authors, post: posts|any) {
+async function getNote(req: NextRequest, author: authors, post: posts|any) {
 	const id = functions.getURL(req)
 	const domain = `${id.protocol}//${id.host}`
-	const url = `${domain}/blog/${post.slug}`
+	const url = `${domain}/blog/${post.slug}/json`
+	const author_url = `${domain}/author/${author.author}/json`
 
 	const note: activitypub.Note = {
 		context: activitypub.getContext(),
 		id: id,
 		published: post.published,
 		url: url,
-		author: author.author,
+		author: author_url,
 		sensitive: post.sensitive,
 		content: String(post.rendered),
 		tag: []
@@ -34,8 +35,8 @@ function getNote(req: NextRequest, author: authors, post: posts|any) {
 
 	const create: activitypub.Create = {
 		id: new URL(`${url}/activity`),
-		author: author.author,
-		note: activitypub.createNote(note)
+		author: author_url,
+		note: await activitypub.createNote(note)
 	}
 	
 	return activitypub.createActivity(create)
