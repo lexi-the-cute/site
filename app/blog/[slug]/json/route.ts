@@ -36,7 +36,7 @@ export async function GET(req: NextRequest, {params}) {
 			content: String(post.rendered),
 			tag: []
 		}
-		const response = activitypub.createNote(note)
+		const response = await activitypub.createNote(note)
 		
 		return new Response(JSON.stringify(response, null, 2), {
 			status: 200,
