@@ -66,8 +66,7 @@ export function getPostFile(slug: string): Promise<never>|Buffer {
 	return fs.readFileSync(POST_PATH)
 }
 
-export function parseImageJSON(json, domain) {
-	const image = JSON.parse(json)
+export function parseImageJSON(image, domain) {
 	image.type = "Image"
 	
 	if(image.url.startsWith("/"))
@@ -78,7 +77,7 @@ export function parseImageJSON(json, domain) {
 
 export function parseProperties(json) {
 	const properties: { type: string; name: any; value: any; }[] = []
-	for(const property of JSON.parse(json)) {
+	for(const property of json) {
 		properties.push({
 			type: "PropertyValue",
 			name: property.key,
