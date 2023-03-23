@@ -87,7 +87,7 @@ export function getContext(): {}[] {
 			// Actively Uses
 			"toot": "http://joinmastodon.org/ns#",
 			"misskey": "https://misskey-hub.net/ns#",
-			"blog": "https://blog.alexisart.me/ns#", // TODO: Replace "blog" with a more specific string to deal with lazy parsers
+			"catgirl": "https://catgirl.land/ns#", // TODO: Replace "blog" with a more specific string to deal with lazy parsers
 			
 			// Unknown If Will Use
 			"ostatus": "http://ostatus.org#",  // This website is now filled with spam
@@ -98,7 +98,11 @@ export function getContext(): {}[] {
 			// Used Context Items
 			"Emoji": "toot:Emoji",
 			"isCat": "misskey:isCat",
-			"animal": "blog:animal"
+			"animal": "catgirl:animal",
+            "featured": {
+                "@id": "toot:featured",
+                "@type": "@id"
+            }
 		}
 	]
 }
