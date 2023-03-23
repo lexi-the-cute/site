@@ -13,13 +13,14 @@ export function GET(req: NextRequest, {params}) {
 	
 	const domain = `${proto}://${host}`
 	const resource = searchParams.has("resource") ? searchParams.get("resource") : ""
-	const split = resource.split(":")
+	const split = resource ? resource.split(":") : ""
 	
 	if (resource == "" || split.length != 2) {
 		return new Response("", {
 			status: 400
 		});
 	} else {
+		// TODO: Check if @ is in string twice+
 		const author = split[1].split("@")[0]
 		
 		const response = {

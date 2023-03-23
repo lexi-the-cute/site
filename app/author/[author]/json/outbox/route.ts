@@ -21,6 +21,7 @@ async function getNote(req: NextRequest, author: authors, post: posts|any) {
 	const domain = `${id.protocol}//${id.host}`
 	const url = `${domain}/blog/${post.slug}/json`
 	const author_url = `${domain}/author/${author.author}/json`
+	const tag = post.tag ? post.tag : []
 
 	const note: activitypub.Note = {
 		context: activitypub.getContext(),
@@ -30,7 +31,7 @@ async function getNote(req: NextRequest, author: authors, post: posts|any) {
 		author: author_url,
 		sensitive: post.sensitive,
 		content: String(post.rendered),
-		tag: []
+		tag: tag
 	}
 
 	const create: activitypub.Create = {

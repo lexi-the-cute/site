@@ -11,7 +11,7 @@ export async function GET(req: NextRequest, {params}) {
 	const id = functions.getURL(req)
 	const slug = params.slug
 	
-	const domain = `${id.protocol}://${id.host}`
+	const domain = `${id.protocol}//${id.host}`
 	const url = `${domain}/blog/${slug}`
 	
 	return ReadPostHTML(slug).then(async function(post) {
@@ -25,7 +25,6 @@ export async function GET(req: NextRequest, {params}) {
 		const author = `${domain}/author/${author_name}/json`
 		const tag = post.tag ? post.tag : []
 
-		// context: string, id: string, published: string, author: string, sensitive: boolean, content: string, tag: []
 		const note: activitypub.Note = {
 			context: activitypub.getContext(),
 			id: id,
@@ -34,7 +33,7 @@ export async function GET(req: NextRequest, {params}) {
 			author: author,
 			sensitive: post.sensitive,
 			content: String(post.rendered),
-			tag: []
+			tag: tag
 		}
 		const response = await activitypub.createNote(note)
 		
